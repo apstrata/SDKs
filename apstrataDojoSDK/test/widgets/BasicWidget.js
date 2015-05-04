@@ -1,3 +1,4 @@
+// This is a test of a template-based widget
 dojo.provide("test.widgets.BasicWidget")
 
 dojo.require("dijit._Templated")
