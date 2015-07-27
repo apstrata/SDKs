@@ -1,7 +1,7 @@
  /*******************************************************************************
  *  Copyright 2011 Apstrata
  *  
- *  This file is part of Apstrata Database Javascript Client.
+ *  This file is part of Apstrata Database Javascript Client. 
  *  
  *  Apstrata Database Javascript Client is free software: you can redistribute it
  *  and/or modify it under the terms of the GNU Lesser General Public License as
