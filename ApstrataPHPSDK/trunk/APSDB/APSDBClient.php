@@ -101,14 +101,14 @@ class APSDBClient
      *		'response' containing the body of the Apstrata response.
      *		'headers' containing the headers set by Apstrata.
      */
-    public function callApi($action, $arrParams, $destinationPath = null)
+    public function callApi($action, $arrParams, $destinationPath = null, $method = "POST")
     {
         // If the API executed is GetFile then the $destinationPath parameter is required.
         if($action == Constants::GET_FILE && $destinationPath == null)
         	exit(Constants::GET_FILE_MISSING_PARAM_ERROR_MSG);
         	
-        $fullURL = $this->getFullURL($action, $arrParams,"POST");
-        $result = $this->sendRequest($fullURL, $arrParams, $destinationPath);
+        $fullURL = $this->getFullURL($action, $arrParams,$method);
+        $result = $this->sendRequest($fullURL, $arrParams, $destinationPath, $method);
         return array("response" => $this->formatResponse($result['response']), "headers" => $result['headers']);
     }
     
@@ -122,7 +122,7 @@ class APSDBClient
      
      * @return string containing the REST URL to be sent to Apstrata.
      */
-    public function getFullURL($action, $params,$method)
+    public function getFullURL($action, $params, $method)
     {
         // Adding apsws.responseType and apsws.time parameters
         $time = time();
@@ -148,8 +148,8 @@ class APSDBClient
 	        for($i=0; $i < count($params); $i++){
 	            array_push($allParam, $params[$i]);
 	        }
-	        
-            $isFile = false;
+
+	        $isFile = false;
 	        for($i=0; $i < count($params); $i++){
 	            if($params[$i]->isFile()){
 	                $isFile = true;
@@ -259,7 +259,7 @@ class APSDBClient
      *		'response' containing the body of the Apstrata response.
      *		'headers' containing the headers set by Apstrata.
      */
-    private function sendRequest($fullURL, array $parameters, $destinationPath)
+    private function sendRequest($fullURL, array $parameters, $destinationPath, $method)
     {
         $useMutliPart = false;
         for($i=0; $i < count($parameters); $i++){
@@ -268,14 +268,13 @@ class APSDBClient
                 break;
             }
         }
-
         if($useMutliPart == false) 
-            return $this->sendNonMultiPart($fullURL, $parameters, $destinationPath);
+            return $this->sendNonMultiPart($fullURL, $parameters, $destinationPath, $method);
         else 
             return $this->sendMultiPart($fullURL, $parameters, $destinationPath);
     }
 
-    private function sendNonMultiPart($fullURL, $parameters, $destinationPath)
+    private function sendNonMultiPart($fullURL, $parameters, $destinationPath, $method)
     {
         $query = "";
         for($i=0; $i < count($parameters); $i++){
@@ -284,15 +283,26 @@ class APSDBClient
             if($i < count($parameters) - 1)
                 $query .= "&";
         }
+        $url = parse_url($fullURL);
+        $postReq = "" ;
 
-        $url = parse_url ($fullURL);
-        $postReq  = "POST ".$url['path']."?".$url['query']." HTTP/1.0\r\n";
-        $postReq .= "Host: " . $url['host'] . (empty($url['port']) ? "" : ":".$url['port']) ."\r\n";
-        $postReq .= "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n";
-        $postReq .= "Content-Length: " . strlen($query) . "\r\n";
-        $postReq .= "\r\n";
-        $postReq .= $query;
-        
+        if($method == "POST"){
+        	$url = parse_url ($fullURL);
+        	$postReq  = "POST ".$url['path']."?".$url['query']." HTTP/1.0\r\n";
+        	$postReq .= "Host: " . $url['host'] . "\r\n";
+        	$postReq .= "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n";
+        	$postReq .= "Content-Length: " . strlen($query) . "\r\n";
+        	$postReq .= "\r\n";
+        	$postReq .= $query;
+        }else{
+        	$postReq  = strtoupper($method). " " . $fullURL ."&". $query." HTTP/1.0\r\n";
+        	$postReq .= "Host: " . $url['host'] . (empty($url['port']) ? "" : ":".$url['port']) ."\r\n";
+        	$postReq .= "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n";
+        	$postReq .= "\r\n";
+        	//$postReq .= $query;
+        }
+
+       
         $port = $this->getPort($url, $fullURL);
         $hostName = $this->getHostName($url, $fullURL);
         
