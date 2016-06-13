@@ -60,7 +60,7 @@ function getPageSelection(pageSelection, apsdb, store) {
 	
 	try {		
 		
-		pageSelection = [].concat(pageSelection);
+		pageSelection = [].concat(pageSelection.split(","));
 		
 		var results = []; 
 		for (var i = 0; i < pageSelection.length; i++) {
