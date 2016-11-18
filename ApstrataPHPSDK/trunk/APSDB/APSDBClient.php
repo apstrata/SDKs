@@ -28,7 +28,8 @@ class APSDBClient
     private $serviceURL;
     private $user;
     private $APS_DB_URL;
-
+	private $bearerToken;
+	
 	/**
      * This client is used to make requests to Apstrata.
      * It can be used to make owner, user or anonymous requests depending on the parameters you pass.
@@ -62,10 +63,11 @@ class APSDBClient
      * @param string $serviceURL
      * 		This parameter should be the serviceURL.
      */
-    public function  APSDBClient($accountKey, $accountSecret = null, $userLogin = null, $serviceURL = null)
+    public function  APSDBClient($accountKey, $accountSecret = null, $userLogin = null, $serviceURL = null,$bearerToken = null)
     {
         $this->accountKey = $accountKey;
         $this->userLogin = $userLogin;
+        $this->bearerToken = $bearerToken;
         
         if($userLogin != null){
         	// If this is a user request then the second parameter $accountSecret is the user's password
@@ -107,7 +109,12 @@ class APSDBClient
         if($action == Constants::GET_FILE && $destinationPath == null)
         	exit(Constants::GET_FILE_MISSING_PARAM_ERROR_MSG);
         	
-        $fullURL = $this->getFullURL($action, $arrParams,$method);
+        if($this->bearerToken != null){
+        	$fullURL = $this->getBearerURL($action);
+        }else{
+        	$fullURL = $this->getFullURL($action, $arrParams,$method);
+        }	
+        
         $result = $this->sendRequest($fullURL, $arrParams, $destinationPath, $method);
         return array("response" => $this->formatResponse($result['response']), "headers" => $result['headers']);
     }
@@ -166,46 +173,6 @@ class APSDBClient
 	        
         }
         return $tmpURL . $paramString;
-    }
-    
-    public function buildGetFileURL($params){
-    	// Adding apsws.responseType and apsws.time parameters
-    	$time = time();
-    	$paramString = "?apsws.responseType=json&apsws.time=" . $time;
-    	// Adding apsws.user parameter if the request was executed by a user.
-    	if($this->userLogin != null)
-    		$paramString .= "&apsws.user=" . $this->userLogin;
-    
-    		$tmpURL = "";
-    		$tmpURL =  $this->APS_DB_URL . "/" . $this->accountKey . "/GetFile";
-    
-    		// If the request is executed by an account's owner or a user then compute the signature to be sent with the request.
-    		if($this->accountSecret != null){
-    
-    			$allParam = array();
-    			array_push($allParam, new KeyValue("apsws.time", $time));
-    			array_push($allParam, new KeyValue("apsws.responseType", "json"));
-    
-    			if($this->userLogin != null)
-    				array_push($allParam, new KeyValue("apsws.user", $this->userLogin));
-    
-    				for($i=0; $i < count($params); $i++){
-    					array_push($allParam, $params[$i]);
-    				}
-    
-    				$isFile = false;
-    				for($i=0; $i < count($params); $i++){
-    					if($params[$i]->isFile()){
-    						$isFile = true;
-    						break;
-    					}
-    
-    					$paramString .= "&" . $params[$i]->getKey() . "=" . $params[$i]->getValue();
-    				}
-    				$paramString .= "&apsws.authSig=" . $this->getLevel1HashString($this->accountKey, $this->accountSecret, "GetFile", $time);
-    				$paramString .= "&apsws.authMode=simple";
-    		}
-    		return $tmpURL . $paramString;
     }
 
     /**
@@ -332,12 +299,19 @@ class APSDBClient
         	$postReq .= "Host: " . $url['host'] . "\r\n";
         	$postReq .= "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n";
         	$postReq .= "Content-Length: " . strlen($query) . "\r\n";
+        	if($this->bearerToken != null){
+        		$postReq .= "authorization: bearer " . $this->bearerToken . "\r\n";
+        	}
+        	
         	$postReq .= "\r\n";
         	$postReq .= $query;
         }else{
         	$postReq  = strtoupper($method). " " . $fullURL ."&". $query." HTTP/1.0\r\n";
         	$postReq .= "Host: " . $url['host'] . (empty($url['port']) ? "" : ":".$url['port']) ."\r\n";
         	$postReq .= "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n";
+        	if($this->bearerToken != null){
+        		$postReq .= "Authorization: bearer " . $this->bearerToken . "\r\n";
+        	}
         	$postReq .= "\r\n";
         	//$postReq .= $query;
         }
@@ -368,6 +342,9 @@ class APSDBClient
         $postReq .= "Host: " . $url['host'] . "\r\n";
         $postReq .= "Content-Type: multipart/form-data; boundary=". $boundary ."\r\n";
         $postReq .= "Content-length: " . $this->getContentLength($boundary, $parameters) . "\r\n\r\n";
+        if($this->bearerToken != null){
+        	$postReq .= "authorization: bearer " . $this->bearerToken . "\r\n";
+        }
         $postReq .= "--". $boundary . "\r\n";
         
         $port = $this->getPort($url, $fullURL);
@@ -545,5 +522,10 @@ class APSDBClient
         }
         return $response;
     }
+    
+    private function getBearerURL($action){
+    	return $this->APS_DB_URL . "/r/"  . $action;
+    }
+    
 }
 ?>
