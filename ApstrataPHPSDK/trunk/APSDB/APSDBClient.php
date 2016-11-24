@@ -403,6 +403,47 @@ class APSDBClient
         }
     }
 
+	
+    public function buildGetFileURL($params){
+    	// Adding apsws.responseType and apsws.time parameters
+    	$time = time();
+    	$paramString = "?apsws.responseType=json&apsws.time=" . $time;
+    	// Adding apsws.user parameter if the request was executed by a user.
+    	if($this->userLogin != null)
+    		$paramString .= "&apsws.user=" . $this->userLogin;
+    
+    		$tmpURL = "";
+    		$tmpURL =  $this->APS_DB_URL . "/" . $this->accountKey . "/GetFile";
+    
+    		// If the request is executed by an account's owner or a user then compute the signature to be sent with the request.
+    		if($this->accountSecret != null){
+    
+    			$allParam = array();
+    			array_push($allParam, new KeyValue("apsws.time", $time));
+    			array_push($allParam, new KeyValue("apsws.responseType", "json"));
+    
+    			if($this->userLogin != null)
+    				array_push($allParam, new KeyValue("apsws.user", $this->userLogin));
+    
+    				for($i=0; $i < count($params); $i++){
+    					array_push($allParam, $params[$i]);
+    				}
+    
+    				$isFile = false;
+    				for($i=0; $i < count($params); $i++){
+    					if($params[$i]->isFile()){
+    						$isFile = true;
+    						break;
+    					}
+    
+    					$paramString .= "&" . $params[$i]->getKey() . "=" . $params[$i]->getValue();
+    				}
+    				$paramString .= "&apsws.authSig=" . $this->getLevel1HashString($this->accountKey, $this->accountSecret, "GetFile", $time);
+    				$paramString .= "&apsws.authMode=simple";
+    		}
+    		return $tmpURL . $paramString;
+    }	
+	
     /**
      * This method is responsible for calculating the content length when sending
      * multipart requests
