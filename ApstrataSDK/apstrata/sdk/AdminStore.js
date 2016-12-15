@@ -263,7 +263,11 @@ dojo.declare("apstrata.sdk.AdminStore",
 				
 				if (options && options.store) {
 					requestParams["apsdb.store"] = options.store;
-				} 
+				}
+				
+				if (options && options.runAs) {
+					requestParams["apsdb.runAs"] = options.runAs;
+				}
 				
 				this.client.call("Query", requestParams, null, clientOptions).then(
 					function(response) {
