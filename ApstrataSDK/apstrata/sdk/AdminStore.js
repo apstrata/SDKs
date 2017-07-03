@@ -269,6 +269,10 @@ dojo.declare("apstrata.sdk.AdminStore",
 					requestParams["apsdb.runAs"] = options.runAs;
 				}
 				
+				if(options && options["apsdb.includeIndex"]){
+				    requestParams ["apsdb.includeIndex"] = options["apsdb.includeIndex"];
+				}
+				
 				this.client.call("Query", requestParams, null, clientOptions).then(
 					function(response) {
 						if (response.result.documents.length>0) {
