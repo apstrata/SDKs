@@ -175,7 +175,8 @@ dojo.declare('apstrata.Client',
 					}
 				}
 			})
-
+			if(!attrs.sync)
+				attrs.sync = false;
 			operation.execute(attrs)		
 			this.url = operation.url		
 		} 
