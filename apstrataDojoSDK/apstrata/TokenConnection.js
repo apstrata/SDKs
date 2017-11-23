@@ -477,13 +477,15 @@ dojo.declare("apstrata.TokenConnection",
 
 				return;
 			}
-
+			if(!args.sync)
+				args.sync = false;
 			// 2. Create the Apstrata client that will delete the user's token.
 			apstrata.logger.debug("Logging out");
 			var client = new apstrata.Client({connection: self});
 			client.call({
 				action: "DeleteToken",
 				useHttpMethod: "POST",
+				sync:args.sync,
 				request: {},
 				load: function (operation) {
 					apstrata.logger.debug("Token deleted");
