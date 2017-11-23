@@ -253,6 +253,10 @@ dojo.declare("apstrata.Post",
 				callAttrs.handleAs = "json";
 				delete callAttrs.content["apsws.callback"];
 				delete callAttrs.content["apsws.redirectHref"];
+				if(!attrs.sync)
+					callAttrs.sync = false;
+				else
+					callAttrs.sync = true;
 				dojo.xhrPost(callAttrs);
 			}
 		}
