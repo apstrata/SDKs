@@ -38,7 +38,23 @@ dojo.declare("apstrata.horizon.Grid",
 	rowsPerPage: 20,
 	sbTitle: "Title:",
 	sbActionLabel: "Search",
-	
+	advancedSearch:false,
+	advancedSearchOpt:{
+		basicActionLabel:"Search",
+		basicTitle:"Filter",
+		advancedActionLabel:"Search",
+		advancedTitle:"Filter",
+		basicColmuns:[
+			{
+				code:"id",
+				label:"ID",
+				class:""
+			}
+		],
+		
+		defaultAdvancedMode:false
+
+	},
 	constructor: function() {
 		this.editable = true
 		this.filterable = true
@@ -54,7 +70,7 @@ dojo.declare("apstrata.horizon.Grid",
 		if (this.filterable) {
 			var filterDv = dojo.create("div", null, this.dvHeader)
 			if(self.gridParams.sbTitle) self.sbTitle = self.gridParams.sbTitle;
-			this._filter = new this.filterClass({attrs: self.filterClassAttrs, titleLabel: self.sbTitle, searchActionLabel: self.sbActionLabel, titleMsg: self.sbTitleMsg }, filterDv)
+			this._filter = new this.filterClass({attrs: self.filterClassAttrs, titleLabel: self.sbTitle, searchActionLabel: self.sbActionLabel, titleMsg: self.sbTitleMsg ,advancedSearch:self.advancedSearch,advancedSearchOpt:self.advancedSearchOpt }, filterDv)
 			dojo.connect(self._filter, "search", dojo.hitch(self, "filter"))
 		}
 		
