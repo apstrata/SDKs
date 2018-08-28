@@ -11,7 +11,6 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 	{
 		templatePath: dojo.moduleUrl("apstrata.horizon", "templates/GridFTSearch.html"),
 		widgetsInTemplate: true,
-		safe:"",
 
 		titleLabel: "Title:",
 		searchActionLabel: "Search",
@@ -35,7 +34,7 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 			var data = {
 				type: "basic"
 			};
-			for(item of this.advancedSearchOpt.basicColmuns){
+			for(item of this.advancedSearchOpt.basicColumns){
 				data[item.code]=this.frmSearchBasic.get('value')[item.code];
 			}
 			this.search(data)
@@ -47,7 +46,7 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 				type: "advanced",
 				query: this.frmSearchAdvanced.get('value').query
 			})
-			for(item of this.advancedSearchOpt.basicColmuns){
+			for(item of this.advancedSearchOpt.basicColumns){
 				var col1 = this[item.code];
 				col1.set("value","");
 			}

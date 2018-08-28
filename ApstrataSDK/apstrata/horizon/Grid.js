@@ -44,11 +44,11 @@ dojo.declare("apstrata.horizon.Grid",
 		basicTitle:"Filter",
 		advancedActionLabel:"Search",
 		advancedTitle:"Filter",
-		basicColmuns:[
+		basicColumns:[
 			{
 				code:"id",
 				label:"ID",
-				class:""
+				itemClass:""
 			}
 		],
 		
