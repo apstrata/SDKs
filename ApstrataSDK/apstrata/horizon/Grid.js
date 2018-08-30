@@ -216,5 +216,6 @@ dojo.declare("apstrata.horizon.Grid",
 		var self = this;
 		self._grid.setStructure(self._grid.structure);	
 	}
+
 })
 

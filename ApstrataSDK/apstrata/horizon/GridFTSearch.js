@@ -38,7 +38,7 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 				data[item.code]=this.frmSearchBasic.get('value')[item.code];
 			}
 			this.search(data)
-			var query = dijit.byId("query");
+			var query = this.query;
 			query.set("value","");
 		},
 		_search_advanced: function () {
