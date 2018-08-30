@@ -25,9 +25,7 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 		var data = {
 			"type": "basic"
 		};
-		for(item of this.advancedSearchOpt.basicColumns){
-			data[item.code]=this.frmSearchBasic.get('value')[item.code];
-		}
+
 		this.search(data)
 	},
 	_search: function () {
