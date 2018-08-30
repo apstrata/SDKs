@@ -26,17 +26,7 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 		})
 	},
 
-	_search_advanced: function () {
-		this.search({
-			type: "advanced",
-			query: this.frmSearchAdvanced.get('value').query
-		})
-		for(item of this.advancedSearchOpt.basicColumns){
-			var col1 = this[item.code];
-			col1.set("value","");
-		}
 
-	},
 	enable_advanced: function () {
 		this.basicMode = false;
 		this.advancedMode = true;
