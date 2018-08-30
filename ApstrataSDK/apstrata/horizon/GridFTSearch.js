@@ -21,13 +21,7 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 	postCreate: function () {
 		this.update();
 	},
-	_search_basic: function () {
-		var data = {
-			"type": "basic"
-		};
-
-		this.search(data)
-	},
+	
 	_search: function () {
 		this.search({
 			type: "normal",
@@ -35,6 +29,39 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 		})
 	},
 	
+	_search_basic: function () {
+		var data = {
+			type: "basic"
+		};
 
-	search: function(attr) {}
+		this.search(data)
+		var query = this.query;
+		query.set("value","");
+	},
+	_search_advanced: function () {
+		this.search({
+			type: "advanced",
+			query: this.frmSearchAdvanced.get('value').query
+		})
+
+
+	},
+	enable_advanced: function () {
+		this.basicMode = false;
+		this.advancedMode = true;
+		this.update();
+	},
+	enable_basic: function () {
+		this.basicMode = true;
+		this.advancedMode = false;
+		this.update();
+	},
+
+	search: function (attr) { },
+	update: function () {
+
+		dojo.query('[dojoAttachPoint="frmSearchNormalWrapper"]').style("display", (this.notAdvancedSearch ? "block" : "none"))
+		dojo.query('[dojoAttachPoint="frmSearchBasicWrapper"]').style("display", this.basicMode ? "block" : "none")
+		dojo.query('[dojoAttachPoint="frmSearchAdvancedWrapper"]').style("display", this.advancedMode ? "block" : "none")
+	}
 });
