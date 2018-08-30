@@ -18,51 +18,45 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 			this.basicMode = (!args.advancedSearchOpt.defaultAdvancedMode) && args.advancedSearch;
 			this.advancedMode = (args.advancedSearchOpt.defaultAdvancedMode && args.advancedSearch);
 	},
-	_search: function() {
+
+	_search: function () {
 		this.search({
-			search: this.frmSearch.get('value').search
+			type: "normal",
+			search: this.frmSearchNormal.get('value').search
 		})
 	},
-	
-	search: function(attr) {},
-	_search: function () {
-			this.search({
-				type: "normal",
-				search: this.frmSearchNormal.get('value').search
-			})
-		},
-		_search_basic: function () {
-			var data = {
-				type: "basic"
-			};
-			for(item of this.advancedSearchOpt.basicColumns){
-				data[item.code]=this.frmSearchBasic.get('value')[item.code];
-			}
-			this.search(data)
-			var query = this.query;
-			query.set("value","");
-		},
-		_search_advanced: function () {
-			this.search({
-				type: "advanced",
-				query: this.frmSearchAdvanced.get('value').query
-			})
-			for(item of this.advancedSearchOpt.basicColumns){
-				var col1 = this[item.code];
-				col1.set("value","");
-			}
-		
-		},
-		enable_advanced: function () {
-			this.basicMode = false;
-			this.advancedMode = true;
-			this.update();
-		},
-		enable_basic: function () {
-			this.basicMode = true;
-			this.advancedMode = false;
-			this.update();
-		},
+	_search_basic: function () {
+		var data = {
+			type: "basic"
+		};
+		for(item of this.advancedSearchOpt.basicColumns){
+			data[item.code]=this.frmSearchBasic.get('value')[item.code];
+		}
+		this.search(data)
+		var query = this.query;
+		query.set("value","");
+	},
+	_search_advanced: function () {
+		this.search({
+			type: "advanced",
+			query: this.frmSearchAdvanced.get('value').query
+		})
+		for(item of this.advancedSearchOpt.basicColumns){
+			var col1 = this[item.code];
+			col1.set("value","");
+		}
 
-		search: function (attr) { },
+	},
+	enable_advanced: function () {
+		this.basicMode = false;
+		this.advancedMode = true;
+		this.update();
+	},
+	enable_basic: function () {
+		this.basicMode = true;
+		this.advancedMode = false;
+		this.update();
+	},
+
+	search: function (attr) { },
 })
