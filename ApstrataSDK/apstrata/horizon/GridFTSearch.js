@@ -53,11 +53,5 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 			this.update();
 		},
 
-		search: function (attr) { },
-		update: function () {
-
-			dojo.query('[dojoAttachPoint="frmSearchNormalWrapper"]').style("display", (this.notAdvancedSearch ? "block" : "none"))
-			dojo.query('[dojoAttachPoint="frmSearchBasicWrapper"]').style("display", this.basicMode ? "block" : "none")
-			dojo.query('[dojoAttachPoint="frmSearchAdvancedWrapper"]').style("display", this.advancedMode ? "block" : "none")
-		}
+		search: function (attr) { }
 	})
