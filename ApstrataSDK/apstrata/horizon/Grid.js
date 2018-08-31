@@ -44,6 +44,7 @@ dojo.declare("apstrata.horizon.Grid",
 		basicTitle:"Filter",
 		advancedActionLabel:"Search",
 		advancedTitle:"Filter",
+		advancedInputWidth:"25em",
 		basicColumns:[
 			{
 				code:"id",
@@ -77,6 +78,8 @@ dojo.declare("apstrata.horizon.Grid",
 		this.resize()
 		
 		this._grid = new this.gridClass(this.gridParams)
+		
+
 		dojo.place(this._grid.domNode, this.dvContent)
 		this._grid.startup()
 		this._handle = dojo.connect(this._grid, "onRowClick", dojo.hitch(this, "onClick")) 

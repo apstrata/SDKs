@@ -22,6 +22,25 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 		},
 		postCreate: function () {
 			this.update();
+			var self=this;
+			//attach enter pressed event to inputs
+			this.query.focusNode.addEventListener("keydown", function (event) {
+				if(event.keyCode == 13){
+					self._search_advanced();
+				}
+			
+			});
+			for (item of this.advancedSearchOpt.basicColumns) {
+				var __input = this[item.code];
+				__input.focusNode.addEventListener("keydown", function (event) {
+				
+					if(event.keyCode == 13){
+						self._search_basic();
+					}
+				
+				});
+			}
+
 		},
 
 		_search: function () {
@@ -34,26 +53,25 @@ dojo.declare("apstrata.horizon.GridFTSearch",
 			var data = {
 				type: "basic"
 			};
-			for( var i = 0 ; i < this.advancedSearchOpt.basicColumns.length; i++){
-				var item = this.advancedSearchOpt.basicColumns[i];
-				data[item.code]=this.frmSearchBasic.get('value')[item.code];
+			for (item of this.advancedSearchOpt.basicColumns) {
+				data[item.code] = this.frmSearchBasic.get('value')[item.code];
 			}
-			
 			this.search(data)
 			var query = this.query;
-			query.set("value","");
+			query.set("value", "");
 		},
 		_search_advanced: function () {
 			this.search({
 				type: "advanced",
 				query: this.frmSearchAdvanced.get('value').query
 			})
-			for( var i = 0 ; i < this.advancedSearchOpt.basicColumns.length; i++){
-				var item = this.advancedSearchOpt.basicColumns[i];
+			for (item of this.advancedSearchOpt.basicColumns) {
 				var col1 = this[item.code];
-				col1.set("value","");
+				col1.set("value", "");
 			}
+
 		},
+		
 		enable_advanced: function () {
 			this.basicMode = false;
 			this.advancedMode = true;

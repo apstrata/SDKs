@@ -14,7 +14,7 @@
 	<div dojoAttachPoint='frmSearchBasicWrapper'>
 		<div dojoType='dijit.form.Form' dojoAttachPoint='frmSearchBasic'>
 
-			<span dojoAttachPoint="titleSpan">{{ advancedSearchOpt.basicTitle|default:""}}:</span> 
+			
 
 			{% for item in advancedSearchOpt.basicColumns %}
 			<span>{{ item.label|default:""}}</span> <input class="{{item.itemClass}}" dojoType='dijit.form.ValidationTextBox' dojoAttachPoint='{{item.code}}' name='{{ item.code|default:""}}'
@@ -32,7 +32,7 @@
 		<div dojoType='dijit.form.Form' dojoAttachPoint='frmSearchAdvanced'>
 
 			<span dojoAttachPoint="titleSpan">{{ advancedSearchOpt.advancedTitle|default:""}}</span>
-			<input  dojoType='dijit.form.ValidationTextBox' dojoAttachPoint='query' style="width: 30.3em;" name='query' type='text' placeholder="Query">
+			<input  dojoType='dijit.form.ValidationTextBox' dojoAttachPoint='query' style='width: {{ advancedSearchOpt.advancedInputWidth|default:"20em"}};' name='query' type='text' placeholder="Query">
 			<button dojoType='dijit.form.Button' dojoAttachEvent='onClick: _search_advanced' type="button">{{ advancedSearchOpt.advancedActionLabel|default:""}}</button>
 			<a href="#"  dojoattachevent='onclick:enable_basic' type="button" >Basic</a>
 		</div>
