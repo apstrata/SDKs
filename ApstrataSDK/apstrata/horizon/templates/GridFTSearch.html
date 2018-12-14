@@ -17,7 +17,7 @@
 			
 
 			{% for item in advancedSearchOpt.basicColumns %}
-			<span>{{ item.label|default:""}}</span> <input class="{{item.itemClass}}" dojoType='dijit.form.ValidationTextBox' dojoAttachPoint='{{item.code}}' name='{{ item.code|default:""}}'
+			<Label class="mrgr5">{{ item.label|default:""}}</Label> <input class="{{item.itemClass}} mrgr5" dojoType='dijit.form.ValidationTextBox' dojoAttachPoint='{{item.code}}' name='{{ item.code|default:""}}'
 			type='text' placeholder='{{ item.label|default:""}}' >
 		   
 			{% endfor %}
