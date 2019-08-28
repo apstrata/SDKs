@@ -1,6 +1,43 @@
-<div class="FTSearch">{{% %}}
-	<div dojoType='dijit.form.Form' dojoAttachPoint='frmSearch'>
-		&nbsp;&nbsp;&nbsp;&nbsp;<span dojoAttachPoint="titleSpan">{{ titleLabel|safe|default:""}}</span> <input dojoType='dijit.form.ValidationTextBox' name='search' type='text' promptMessage="Search">
-		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick: _search' type="button">{{ searchActionLabel|safe|default:""}}</button>
+<div class="FTSearch" data-dojo-type="dojox.dtl.Inline">
+
+	<div dojoAttachPoint='frmSearchNormalWrapper'>
+		<div dojoType='dijit.form.Form' dojoAttachPoint='frmSearchNormal'>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span dojoAttachPoint="titleSpan">{{ titleLabel|default:""}}</span>
+			<input dojoType='dijit.form.ValidationTextBox' name='search' type='text' promptMessage="Search">
+			<button dojoType='dijit.form.Button' dojoAttachEvent='onClick: _search' type="button">{{ searchActionLabel|default:""}}</button>
+		</div>
 	</div>
+
+
+
+	<div dojoAttachPoint='frmSearchBasicWrapper'>
+		<div dojoType='dijit.form.Form' dojoAttachPoint='frmSearchBasic'>
+
+			
+
+			{% for item in advancedSearchOpt.basicColumns %}
+			<Label class="mrgr5">{{ item.label|default:""}}</Label> <input class="{{item.itemClass}} mrgr5" dojoType='dijit.form.ValidationTextBox' dojoAttachPoint='{{item.code}}' name='{{ item.code|default:""}}'
+			type='text' placeholder='{{ item.label|default:""}}' >
+		   
+			{% endfor %}
+
+
+			<button dojoType='dijit.form.Button' dojoAttachEvent='onClick: _search_basic' type="button">{{ advancedSearchOpt.basicActionLabel|default:""}}</button>
+			<a href="#"  dojoattachevent='onclick:enable_advanced' type="button">Advanced</a>
+		</div>
+		
+	</div>
+	<div dojoAttachPoint='frmSearchAdvancedWrapper'>
+		<div dojoType='dijit.form.Form' dojoAttachPoint='frmSearchAdvanced'>
+
+			<span dojoAttachPoint="titleSpan">{{ advancedSearchOpt.advancedTitle|default:""}}</span>
+			<input  dojoType='dijit.form.ValidationTextBox' dojoAttachPoint='query' style='width: {{ advancedSearchOpt.advancedInputWidth|default:"20em"}};' name='query' type='text' placeholder="Query">
+			<button dojoType='dijit.form.Button' dojoAttachEvent='onClick: _search_advanced' type="button">{{ advancedSearchOpt.advancedActionLabel|default:""}}</button>
+			<a href="#"  dojoattachevent='onclick:enable_basic' type="button" >Basic</a>
+		</div>
+		
+	</div>
+
+
 </div>

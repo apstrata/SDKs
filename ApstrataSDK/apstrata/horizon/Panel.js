@@ -431,7 +431,7 @@ dojo.declare("apstrata.horizon.Panel",
 			width: 350,
 			height: 150,
 			title: "OOPS! An error has occured.",
-			message: errorCode + ": " + errorDetail,
+			message: errorCode ? errorCode + ": " + errorDetail : errorDetail ,
 			iconClass: "errorIcon",
 			actions: [
 				'Ok'
