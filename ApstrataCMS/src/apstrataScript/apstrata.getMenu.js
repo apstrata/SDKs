@@ -36,7 +36,7 @@ if (queryResult &&
 	strOutput +=  '"rightFooterPhp" => ' + _phpEscape(document["rightFooterPhp"]) + ");"
 
 } else {
-	strOutput += 'array ( "pageFound" => "0" )'
+	strOutput += 'array ( "pageFound" => "0" );'
 }
 
 var httpRsp = apsdb.httpRespond( 200, { });
