@@ -28,7 +28,8 @@ class APSDBClient
     private $serviceURL;
     private $user;
     private $APS_DB_URL;
-	private $bearerToken;
+    private $bearerToken;
+    private $isSelfSignedCert;
 	
 	/**
      * This client is used to make requests to Apstrata.
@@ -63,12 +64,13 @@ class APSDBClient
      * @param string $serviceURL
      * 		This parameter should be the serviceURL.
      */
-    public function  APSDBClient($accountKey, $accountSecret = null, $userLogin = null, $serviceURL = null,$bearerToken = null)
+    public function  APSDBClient($accountKey, $accountSecret = null, $userLogin = null, $serviceURL = null,$bearerToken = null, $isSelfSignedCert = false)
     {
         $this->accountKey = $accountKey;
         $this->userLogin = $userLogin;
         $this->bearerToken = $bearerToken;
-        
+        $this->isSelfSignedCert = $isSelfSignedCert;
+	    
         if($userLogin != null){
         	// If this is a user request then the second parameter $accountSecret is the user's password
             $this->accountSecret = strtoupper(md5($accountSecret));
@@ -320,8 +322,16 @@ class APSDBClient
         $port = $this->getPort($url, $fullURL);
         $hostName = $this->getHostName($url, $fullURL);
         
-        $sourceFileHandle = @fsockopen($hostName, $port, $errno, $errstr);
-        
+        //$sourceFileHandle = @fsockopen($hostName, $port, $errno, $errstr);
+        $stream_context = stream_context_create([]);
+       
+        if($this->isSelfSignedCert){
+            $stream_context = stream_context_create([ 'ssl' => [
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+                'verify_depth'   => 0 ]]);
+        }
+	    
         if($sourceFileHandle){
             
             fwrite($sourceFileHandle, $postReq);
@@ -350,8 +360,16 @@ class APSDBClient
         $port = $this->getPort($url, $fullURL);
 		$hostName = $this->getHostName($url, $fullURL);
 		
-        $sourceFileHandle = @fsockopen($hostName, $port, $errno, $errstr);
-        
+        //$sourceFileHandle = @fsockopen($hostName, $port, $errno, $errstr);
+        $stream_context = stream_context_create([]);
+       
+        if($this->isSelfSignedCert){
+            $stream_context = stream_context_create([ 'ssl' => [
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+                'verify_depth'   => 0 ]]);
+        }
+	    
         if($sourceFileHandle){
         
             fwrite($sourceFileHandle, $postReq);
