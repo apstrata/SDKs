@@ -331,6 +331,7 @@ class APSDBClient
                 'allow_self_signed' => true,
                 'verify_depth'   => 0 ]]);
         }
+	$sourceFileHandle = stream_socket_client($hostName.":".$port, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $stream_context);
 	    
         if($sourceFileHandle){
             
@@ -369,6 +370,8 @@ class APSDBClient
                 'allow_self_signed' => true,
                 'verify_depth'   => 0 ]]);
         }
+	
+	$sourceFileHandle = stream_socket_client($hostName.":".$port, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $stream_context);
 	    
         if($sourceFileHandle){
         
